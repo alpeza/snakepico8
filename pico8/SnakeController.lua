@@ -1,5 +1,3 @@
--- https://mboffin.itch.io/
--- Clase de controlador de un jugador
 function can_move(x,y,w,h,flag)
     if (solid(x,y,flag)) return false
     if (solid(x+w,y,flag)) return false
@@ -15,35 +13,6 @@ function can_move(x,y,w,h,flag)
     local flag=fget(map_sprite)
     return flag==mflag
  end
-
- function Vector2(px,py)
-    return {
-        x = px,
-        y = py,
-        setPos = function(self,px,py)
-            self.x = px
-            self.y = py
-        end,
-        getPos = function(self)
-            retur {self.x, self.y}
-        end,
-        add = function(self,mx,my)
-            self.x += mx 
-            self.y += my
-        end,
-        vecmult = function(self,vector)
-            self.x *= vector.x 
-            self.y *= vector.y
-        end,
-        mult = function(self,mx,my)
-            self.x *= mx 
-            self.y *= my
-        end,
-        print = function(self)
-            print("X: " .. self.x .. " Y:" .. self.y)
-        end 
-    }
-end 
 
 function SnakeTail(_sprite,_x,_y)
     -- Objeto de la cola de serpiente

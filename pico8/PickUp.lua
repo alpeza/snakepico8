@@ -42,20 +42,23 @@ function TerrainVector(_flag,_x_max,_y_max)
     }
 end 
 
-function PickUp(_sprite, _x, _y, overlap_obj)
+function PickUp(_sprite, _x, _y, overlap_obj,_points)
     -- Gestor de una pickup
     return {
       x = _x,
       y = _y,
       w = 7,
       h = 7,
+      t = timer(),
+      points=_points,
       sprite = _sprite,
       isActive = true,
       draw = function(self)
          -- printa el sprite
          if (self.isActive) then
             spr(self.sprite,self.x,self.y)
-         end 
+         end
+         -- self:printMessage()
       end,
       isOverlaping = function(self)
         if (overlap(overlap_obj,self)) then
