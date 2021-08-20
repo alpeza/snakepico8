@@ -15,9 +15,17 @@ function Vector2(px,py)
     return {
         x = px,
         y = py,
+        orientation = "N",
         setPos = function(self,px,py)
             self.x = px
             self.y = py
+            self:calcorientation()
+        end,
+        calcorientation = function(self)
+            if self.x == 1  and self.y == 0  then self.orientation = "L" end
+            if self.x == -1 and self.y == 0  then self.orientation = "R" end
+            if self.x == 0  and self.y == 1  then self.orientation = "U" end
+            if self.x == 0  and self.y == -1 then self.orientation = "D" end
         end,
         getPos = function(self)
             return {self.x, self.y}

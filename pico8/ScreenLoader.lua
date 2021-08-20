@@ -1,1 +1,0 @@
--- Script para la gestion de pantallas

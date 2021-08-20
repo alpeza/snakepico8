@@ -28,7 +28,7 @@ function TerrainVector(_flag,_x_max,_y_max)
         fetchRandom = function(self)
             self:load_terrain_vector()
             if self.total_bitmaps > 0 then 
-                randv = flr(rnd(self.total_bitmaps))
+                randv = flr(1 + rnd(self.total_bitmaps))
                 -- print("Rand: " .. randv .. "/" .. self.total_bitmaps)
                 randpos = self.positions[randv]
                 -- limpiamos
@@ -63,6 +63,7 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points)
       isOverlaping = function(self)
         if (overlap(overlap_obj,self)) then
             self.isActive = false
+            sfx(0)
             overlap_obj.overlaps += 1
             -- anadimos un bloque a la serpiente
             overlap_obj:add_chain_to_tail()

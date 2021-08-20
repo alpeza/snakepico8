@@ -90,19 +90,19 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
           elseif self.orientation.x == -1 and self.orientation.y == 0  then self._nx+=self.velocity
           elseif self.orientation.x == 0  and self.orientation.y == 1  then self._ny-=self.velocity
           elseif self.orientation.x == 0  and self.orientation.y == -1 then self._ny+=self.velocity end
-          if (btn(⬅️)) then
+          if (btn(⬅️) and self.orientation.orientation != "R") then
              self.current_sprite=3
              self:update_tail()
              self.orientation:setPos(1,0)
-          elseif (btn(➡️)) then
+          elseif (btn(➡️) and self.orientation.orientation != "L") then
              self.current_sprite=4
              self:update_tail()
              self.orientation:setPos(-1,0)
-          elseif (btn(⬆️)) then
+          elseif (btn(⬆️) and self.orientation.orientation != "D") then
              self.current_sprite=1
              self:update_tail()
              self.orientation:setPos(0,1)
-          elseif (btn(⬇️)) then
+          elseif (btn(⬇️) and self.orientation.orientation != "U") then
              self.current_sprite=2
              self:update_tail()
              self.orientation:setPos(0,-1)
