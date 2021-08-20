@@ -49,6 +49,7 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
        tail_array = {},
        tail_counter = 0,
        current_sprite = 1,
+       alive = true,
        draw = function(self)
           -- pintamos el resto del cuerpo
           for tail in all(self.tail_array) do
@@ -71,7 +72,12 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
                     add(np, SnakeTail(self.sprites_tail,self.x,self.y))
                 else 
                     nowe = self.tail_array[countx]
-                    add(np, SnakeTail(self.sprites_tail,nowe.pos.x,nowe.pos.y)) 
+                    add(np, SnakeTail(self.sprites_tail,nowe.pos.x,nowe.pos.y))
+                    -- validamos si hay colision
+                    if self.x == nowe.pos.x and self.y == nowe.pos.y and countx > SNAKE_BLOCK_LENGTH_COLLISION then 
+                        -- printd("Colision en x: " .. self.x .. " cola: " .. countx)
+                        self.alive = false
+                    end  
                 end 
                 countx += 1
             end 
@@ -114,6 +120,7 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
           if (can_move(self.x,self.y+self._ny,self.w,self.h,_collider_flag)) then
             self.y+=self._ny
           end
+         
           self._nx,self._ny=0,0
           self:update_tail()
        end

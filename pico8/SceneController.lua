@@ -6,6 +6,9 @@ function SceneController(scenes_array)
         secenes = scenes_array,
         current_scene_id = 0,
         current_scene ={},
+        gui = {
+            SpriteMessage = SpriteMessageBox(0,0,1,1,SPRITE_MESSAGE_SPRITES)
+        },
         init = function(self)
             for mscene in all(self.secenes) do
                 mscene:init()
@@ -14,6 +17,7 @@ function SceneController(scenes_array)
         update = function(self)
            if self.current_scene_id != 0 then
                 self.current_scene:update()
+                self.gui.SpriteMessage:update()
            end
         end,
         draw = function(self)
@@ -26,6 +30,7 @@ function SceneController(scenes_array)
                 print("scene > 0", 10,28,7)
             else 
                 self.current_scene:draw()
+                self.gui.SpriteMessage:draw()
             end 
         end,
         loadScene = function(self, pscene)
