@@ -1,3 +1,16 @@
+
+IS_PRINTD_STARTED=false
+function printd(data)
+    -- Printa logs para debug
+    if GAME_LOGS then 
+        if not IS_PRINTD_STARTED then 
+            printh( "****   "..GAME_ID.."   ****" , "pico8.p8l",true)
+            IS_PRINTD_STARTED = true
+        end 
+        printh(GAME_ID .. ": " .. data,"pico8.p8l",false)
+    end 
+end 
+
 function Vector2(px,py)
     return {
         x = px,
@@ -7,7 +20,7 @@ function Vector2(px,py)
             self.y = py
         end,
         getPos = function(self)
-            retur {self.x, self.y}
+            return {self.x, self.y}
         end,
         add = function(self,mx,my)
             self.x += mx 
@@ -22,7 +35,7 @@ function Vector2(px,py)
             self.y *= my
         end,
         print = function(self)
-            print("X: " .. self.x .. " Y:" .. self.y)
+            printd("X: " .. self.x .. " Y:" .. self.y)
         end 
     }
 end
