@@ -7,6 +7,7 @@ __lua__
 #include GameConfig.lua
 #include SceneController.lua
 #include common.lua
+#include Particles.lua
 -->8
 -- SNAKE SCENE
 #include SnakeController.lua

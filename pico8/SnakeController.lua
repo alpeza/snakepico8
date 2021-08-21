@@ -43,6 +43,7 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
        overlaps = 0,
        w = 7,
        h = 7,
+       particles = Particles(),
        sprites=_sprite,
        sprites_tail=_sprite_tail,
        orientation = Vector2(0,0),
@@ -51,6 +52,7 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
        current_sprite = 1,
        alive = true,
        draw = function(self)
+          self.particles:draw()
           -- pintamos el resto del cuerpo
           for tail in all(self.tail_array) do
             tail:draw()
@@ -92,6 +94,12 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
        move_player = function(self)
           -- Se encarga de desplazar al jugador por 
           -- pantalla
+          trail_width = 0.5
+          trail_colors = {12,13,7}
+          trail_colors = {12,11,5,1}
+          trail_amount = 1
+
+          self.particles:update()
           if (self.orientation.x == 1 and self.orientation.y == 0)     then self._nx-=self.velocity 
           elseif self.orientation.x == -1 and self.orientation.y == 0  then self._nx+=self.velocity
           elseif self.orientation.x == 0  and self.orientation.y == 1  then self._ny-=self.velocity
@@ -100,18 +108,23 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
              self.current_sprite=3
              self:update_tail()
              self.orientation:setPos(1,0)
+             self.particles:effect_explode(self.x + 3,self.y + 3 ,trail_width,trail_colors,trail_amount)
           elseif (btn(➡️) and self.orientation.orientation != "L") then
              self.current_sprite=4
              self:update_tail()
              self.orientation:setPos(-1,0)
+             self.particles:effect_explode(self.x + 3,self.y + 3 ,trail_width,trail_colors,trail_amount)
           elseif (btn(⬆️) and self.orientation.orientation != "D") then
              self.current_sprite=1
              self:update_tail()
              self.orientation:setPos(0,1)
+             self.particles:effect_explode(self.x + 3,self.y + 3 ,trail_width,trail_colors,trail_amount)
           elseif (btn(⬇️) and self.orientation.orientation != "U") then
              self.current_sprite=2
              self:update_tail()
              self.orientation:setPos(0,-1)
+             self.particles:effect_explode(self.x + 3,self.y + 3 ,trail_width,trail_colors,trail_amount)
+
           end
           -- validamos las colisiones
           if (can_move(self.x+self._nx,self.y,self.w,self.h,_collider_flag)) then

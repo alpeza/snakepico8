@@ -50,23 +50,26 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points)
       w = 7,
       h = 7,
       t = timer(),
+      particles = Particles(),
       points=_points,
       sprite = _sprite,
       isActive = true,
       draw = function(self)
-         -- printa el sprite
+         self.particles:draw()
          if (self.isActive) then
             spr(self.sprite,self.x,self.y)
          end
-         -- self:printMessage()
+      end,
+      execParticles = function(self)
+        self.particles:update()
+        self.particles:effect_explode(self.x + 3,self.y + 3 ,2,{7,8,14,15},0.6)
       end,
       isOverlaping = function(self)
-        if (overlap(overlap_obj,self)) then
-            self.isActive = false
+        if (overlap(overlap_obj,self) and self.isActive) then
             sfx(0)
             overlap_obj.overlaps += 1
-            -- anadimos un bloque a la serpiente
             overlap_obj:add_chain_to_tail()
+            self.isActive = false
         end 
       end 
     }
@@ -78,12 +81,12 @@ function PickUpFactory(sprite,_overlap_obj,terrainvector_obj)
         sprite = _sprite,
         overlap_obj = _overlap_obj,
         pickups={},
+        t = timer(),
         tv=terrainvector_obj,
         create = function(self, total)
             -- Anade pickups al array de pickups
             for i=1,total do
                 r = self.tv:fetchRandom()
-                -- r:print()
                 add(self.pickups,PickUp(self.sprite,r.x * 8,r.y * 8,self.overlap_obj))
             end
         end,
@@ -96,8 +99,13 @@ function PickUpFactory(sprite,_overlap_obj,terrainvector_obj)
             for pickup in all(self.pickups) do
                 pickup:isOverlaping()
                 if not pickup.isActive then
-                    del(self.pickups,pickup)
-                    self:create(total)
+                    self.t:sleep(0.3)
+                    if self.t:isFinished() then
+                        del(self.pickups,pickup)
+                        self:create(total)
+                    else 
+                        pickup:execParticles()
+                    end
                 end 
             end 
         end 
