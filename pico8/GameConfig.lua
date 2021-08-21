@@ -29,3 +29,5 @@ MAP_MAX_Y=16
 HOME_SCENE_MAP_X = 16
 HOME_SCENE_MAP_Y = 0
 HOME_SCENE_ID = 1
+-- About Scene ++++++++++
+ABOUT_SCENE_ID = 3

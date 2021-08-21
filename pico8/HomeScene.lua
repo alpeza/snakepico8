@@ -24,12 +24,16 @@ function HomeScene(scene_controller)
             self:changeColor()
             if btn(❎) then
                 sc:loadScene(SNAKE_SCENE_ID)
+            end
+            if btn(🅾️) then
+                sc:loadScene(ABOUT_SCENE_ID)
             end 
         end,
         draw = function(self)
             cls()
             map(HOME_SCENE_MAP_X,HOME_SCENE_MAP_Y,0,0,MAP_MAX_X,MAP_MAX_Y)
             print("press button \151 ...", 16*2,16*3,self.cur_color)
+            print("PRESS 🅾️ FOR THE ABOUT", 8*3,8*15,1)
         end 
     }
 end 
