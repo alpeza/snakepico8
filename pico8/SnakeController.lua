@@ -116,9 +116,13 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
           -- validamos las colisiones
           if (can_move(self.x+self._nx,self.y,self.w,self.h,_collider_flag)) then
             self.x+=self._nx
+          else 
+            self.alive = false
           end
           if (can_move(self.x,self.y+self._ny,self.w,self.h,_collider_flag)) then
             self.y+=self._ny
+          else 
+            self.alive = false
           end
          
           self._nx,self._ny=0,0

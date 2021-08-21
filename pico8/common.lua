@@ -95,7 +95,10 @@ function SpriteMessageBox(_x,_y,_h,_w,_sprite_array)
             bm = _sprite_array[8],
             br = _sprite_array[9]
         },
+        lineColor=7,
         lines = {},
+        lineColors = {},
+        linePositions = {},
         _isDisplay = false,
         update = function(self)
             local a = 1
@@ -147,9 +150,14 @@ function SpriteMessageBox(_x,_y,_h,_w,_sprite_array)
                 -- Pintamos el texto
                 local mxc = self.x + 5
                 local myc = self.y + 5
+                local ccount = 1
                 for line in all(self.lines) do
-                    print(line, mxc,myc,7)
+                    local ddx = mxc + self.linePositions[ccount].x
+                    local ddy = myc + self.linePositions[ccount].y
+                    print(line,ddx,ddy,self.lineColors[ccount])
                     myc += 8
+                    mxc = self.x + 5
+                    ccount+=1
                 end
             end 
         end,
@@ -167,8 +175,23 @@ function SpriteMessageBox(_x,_y,_h,_w,_sprite_array)
         hide = function(self)
             self._isDisplay = false
             self.lines = {}
+            self.lineColors = {}
+            self.linePositions = {}
         end,
-        addLine = function(self,messagel)
+        addLine = function(self,messagel,mcolor,lx,ly)
+            -- Sets the color
+            if mcolor != nil then 
+                add(self.lineColors, mcolor)
+            else
+                add(self.lineColors, self.lineColor)
+            end
+            -- Sets the position
+            if lx and ly then
+                add(self.linePositions, Vector2(lx,ly))
+            else
+                add(self.linePositions,Vector2(0,0))
+            end 
+            -- We add the message
             add(self.lines, messagel)
         end
     }
