@@ -14,13 +14,7 @@ function SnakeScene(scene_controller)
                 c:move_player()
                 pf:checkStatus(1)
             else
-                sc.gui.SpriteMessage:hide()
-                sc.gui.SpriteMessage:addLine('   game over')
-                sc.gui.SpriteMessage:addLine('press button ❎')
-                sc.gui.SpriteMessage:addLine('SCORE: ' .. c.overlaps )
-                sc.gui.SpriteMessage:setPos(8*4,4*8)
-                sc.gui.SpriteMessage:setDimensions(3,7)
-                sc.gui.SpriteMessage:show()               
+                self:gameOverHandler()
             end
         end,
         draw = function(self)
@@ -30,6 +24,15 @@ function SnakeScene(scene_controller)
             c:draw()
             print(c.overlaps,10,2,14)
             print(c.overlaps,11,2,8)
+        end,
+        gameOverHandler = function(self)
+            sc.gui.SpriteMessage:hide()
+            sc.gui.SpriteMessage:addLine('   game over')
+            sc.gui.SpriteMessage:addLine('press ❎ button')
+            sc.gui.SpriteMessage:addLine('SCORE: ' .. c.overlaps )
+            sc.gui.SpriteMessage:setPos(8*4,4*8)
+            sc.gui.SpriteMessage:setDimensions(3,7)
+            sc.gui.SpriteMessage:show()       
         end 
     }
 end 

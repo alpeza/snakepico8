@@ -1,8 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 32
 __lua__
--- SuperGame
--- by alpeza
+-- JASnake for Pico8
+-- by @alpeza
 #include GameConfig.lua
 #include SceneController.lua
 #include common.lua
