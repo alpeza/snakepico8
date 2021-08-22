@@ -16,12 +16,13 @@ function CrossPowerUp(maincontroller)
             up = Vector2(0,2*8),
             down = Vector2(0,13*8)
         },
-        enabled = true,
+        enabled = false,
         draw = function(self)
             spr(self.current_sprite,self.position.x,self.position.y)
         end,
         timeUpdater= function(self)
             if self.enabled then 
+                self.current_sprite = self.activateSprite
                 self.t:sleep(self.effectTimeSeconds)
                 if self.t:isFinished() then 
                     self.enabled = false

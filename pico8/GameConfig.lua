@@ -31,3 +31,6 @@ HOME_SCENE_MAP_Y = 0
 HOME_SCENE_ID = 1
 -- About Scene ++++++++++
 ABOUT_SCENE_ID = 3
+-- Pickups +++++++++
+PICKUP_POWERUP_CROSS_ID = 1
+PICKUP_POWERUP_CROSS_SPRITE = 79

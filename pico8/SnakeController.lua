@@ -51,6 +51,7 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
        tail_counter = 0,
        current_sprite = 1,
        alive = true,
+       -- SnakePower Ups
        crossPower = CrossPowerUp(self),
        draw = function(self)
           self.particles:draw()

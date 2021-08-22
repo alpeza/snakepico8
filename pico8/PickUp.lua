@@ -42,7 +42,7 @@ function TerrainVector(_flag,_x_max,_y_max)
     }
 end 
 
-function PickUp(_sprite, _x, _y, overlap_obj,_points)
+function PickUp(_sprite, _x, _y, overlap_obj,_points,_type)
     -- Gestor de una pickup
     return {
       x = _x,
@@ -50,6 +50,7 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points)
       w = 7,
       h = 7,
       t = timer(),
+      type = _type,
       particles = Particles(),
       points=_points,
       sprite = _sprite,
@@ -66,9 +67,15 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points)
       end,
       isOverlaping = function(self)
         if (overlap(overlap_obj,self) and self.isActive) then
-            sfx(0)
-            overlap_obj.overlaps += 1
-            overlap_obj:add_chain_to_tail()
+            -- Food pickup
+            if not self.type then 
+                sfx(0)
+                overlap_obj.overlaps += 1
+                overlap_obj:add_chain_to_tail()
+            elseif self.type == PICKUP_POWERUP_CROSS_ID then
+                overlap_obj.crossPower.enabled = true
+            end 
+            -- Desactivamos el pickup
             self.isActive = false
         end 
       end 
@@ -103,6 +110,55 @@ function PickUpFactory(sprite,_overlap_obj,terrainvector_obj)
                     if self.t:isFinished() then
                         del(self.pickups,pickup)
                         self:create(total)
+                    else 
+                        pickup:execParticles()
+                    end
+                end 
+            end 
+        end 
+    }
+end 
+
+
+
+function PowerUpPickUpFactory(_overlap_obj,terrainvector_obj) 
+    return {
+        overlap_obj = _overlap_obj,
+        pickups={},
+        t = timer(),
+        cross_powerup_enabled = true,
+        tv=terrainvector_obj,
+        create = function(self)
+            -- CROSS POWER UP
+            if self.cross_powerup_enabled and self.overlap_obj.overlaps > 0 and self.overlap_obj.overlaps % 10 == 0 then  
+                local r = self.tv:fetchRandom()
+                local trueAndFalse = {true, false}
+                if trueAndFalse[flr(rnd(3)) + 1] then 
+                    printd(flr(rnd(3)) + 1)
+                    self.cross_powerup_enabled = false
+                    add(self.pickups,PickUp(PICKUP_POWERUP_CROSS_SPRITE, r.x * 8, r.y * 8, self.overlap_obj,_points,PICKUP_POWERUP_CROSS_ID))
+                end
+            end
+            -- OTHER POWER UPS 
+        end,
+        draw = function(self)
+            for pickup in all(self.pickups) do
+                pickup:draw()
+            end 
+        end,
+        checkStatus = function(self)
+            -- Creacion de powerups
+            self:create()
+            -- Control de powerups
+            for pickup in all(self.pickups) do
+                pickup:isOverlaping()
+                if not pickup.isActive then
+                    self.t:sleep(0.3)
+                    if self.t:isFinished() then
+                        del(self.pickups,pickup)
+                        if pickup.type == PICKUP_POWERUP_CROSS_ID then
+                            self.cross_powerup_enabled = true
+                        end 
                     else 
                         pickup:execParticles()
                     end

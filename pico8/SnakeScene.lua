@@ -11,6 +11,9 @@ function SnakeScene(scene_controller)
             tv = TerrainVector(TERRAIN_FLAG,TERRAIN_MAX_X,TERRAIN_MAX_Y) -- green
             -- Pickup factory de manzanas
             pf = PickUpFactory(PICKUP_1_SPRITE,c,tv)
+            -- Pickup de powerups 
+            puf = PowerUpPickUpFactory(c,tv)
+
             self.t = timer()
             pf:create(3)
         end,
@@ -18,6 +21,7 @@ function SnakeScene(scene_controller)
             if c.alive then 
                 c:move_player()
                 pf:checkStatus(1)
+                puf:checkStatus()
             else
                 self:gameOverHandler()
             end
@@ -26,6 +30,7 @@ function SnakeScene(scene_controller)
             cls()
             map(SNAKE_SCENE_MAP_X,SNAKE_SCENE_MAP_Y,0,0,MAP_MAX_X,MAP_MAX_Y)
             pf:draw()
+            puf:draw()
             c:draw()
             print(c.overlaps,10,2,14)
             print(c.overlaps,11,2,8)
