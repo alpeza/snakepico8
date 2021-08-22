@@ -52,6 +52,9 @@ function timer()
     return {
         initTime = 0,
         finishtime = 0,
+        getCurrent = function(self)
+            return time() - self.initTime
+        end,
         sleep = function(self,seconds)
             if self.initTime == 0 then
                 self.initTime = time()

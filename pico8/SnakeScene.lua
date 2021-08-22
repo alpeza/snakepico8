@@ -7,9 +7,9 @@ function SnakeScene(scene_controller)
         total_c = 3,
         count = 0,
         init = function(self)
-            -- c = SnakeCharacterDebug(SNAKE_HEAD_SPRITES,SNAKE_BLOCK_SPRITES,SNAKE_INIT_POS_X,SNAKE_INIT_POS_Y,SNAKE_HEAD_COLLIDER_FLAG)
             c = SnakeCharacter(SNAKE_HEAD_SPRITES,SNAKE_BLOCK_SPRITES,SNAKE_INIT_POS_X,SNAKE_INIT_POS_Y,SNAKE_HEAD_COLLIDER_FLAG)
             tv = TerrainVector(TERRAIN_FLAG,TERRAIN_MAX_X,TERRAIN_MAX_Y) -- green
+            -- Pickup factory de manzanas
             pf = PickUpFactory(PICKUP_1_SPRITE,c,tv)
             self.t = timer()
             pf:create(3)

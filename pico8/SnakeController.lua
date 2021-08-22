@@ -51,8 +51,10 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
        tail_counter = 0,
        current_sprite = 1,
        alive = true,
+       crossPower = CrossPowerUp(self),
        draw = function(self)
           self.particles:draw()
+          self.crossPower:draw()
           -- pintamos el resto del cuerpo
           for tail in all(self.tail_array) do
             tail:draw()
@@ -92,6 +94,7 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
         self.tail_counter += 1
        end,
        move_player = function(self)
+          self.crossPower:timeUpdater()
           -- Se encarga de desplazar al jugador por 
           -- pantalla
           trail_width = 0.5
@@ -130,12 +133,12 @@ function SnakeCharacter(_sprite,_sprite_tail, _x, _y, _collider_flag)
           if (can_move(self.x+self._nx,self.y,self.w,self.h,_collider_flag)) then
             self.x+=self._nx
           else 
-            self.alive = false
+            self.crossPower:update()
           end
           if (can_move(self.x,self.y+self._ny,self.w,self.h,_collider_flag)) then
             self.y+=self._ny
           else 
-            self.alive = false
+            self.crossPower:update()
           end
          
           self._nx,self._ny=0,0
