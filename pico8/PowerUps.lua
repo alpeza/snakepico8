@@ -78,17 +78,27 @@ function Bullet(x,y,orientation,velocity,sprite)
         sprite = sprite,
         velocity = velocity,
         orientation = orientation,
+        particles = Particles(),
+        particles_trail_width = 4,
+        particles_trail_colors = {14,1,0},
+        particles_trail_amount = 2,
         initTime = time(),
         enabled = true,
         draw = function(self)
             if self.enabled then
                 spr(self.sprite,self.x,self.y)
             end
+            self.particles:draw()
         end,
         update = function(self)
             -- self.orientation:print()
             self.x +=  -1 * self.velocity * self.orientation.x 
             self.y +=  -1 * self.velocity * self.orientation.y 
+            -- Particulas
+            self.particles:update()
+            self.particles:effect_bullet(self.x,self.y,
+            self.particles_trail_width,self.particles_trail_colors,
+            self.particles_trail_amount)
         end
     }
 end 

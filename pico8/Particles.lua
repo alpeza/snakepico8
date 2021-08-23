@@ -110,6 +110,22 @@ function Particles()
                     c_table    -- color_table
                 )
             end        
+        end,
+        effect_bullet = function(self,x,y,w,c_table,num)
+            for i=0, num do
+                self:add_fx(
+                    x+rnd(w)-w/10,  -- x
+                    y+rnd(w)-w/10,  -- y
+                    30+rnd(10),  -- die
+                    0,         -- dx
+                    .2,       -- dy
+                    false,     -- gravity
+                    true,     -- grow
+                    true,     -- shrink
+                    1,         -- radius
+                    c_table    -- color_table
+                )
+            end        
         end
     }
 end 
