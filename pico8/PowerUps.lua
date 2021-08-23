@@ -6,7 +6,7 @@ function CrossPowerUp(maincontroller)
         inactiveSprite = 94,
         shineSprite = 95, 
         alert_sfx = 2,
-        effectTimeSeconds = 20,
+        effectTimeSeconds = 20000000,
         position = Vector2(14*8,0),
         t = timer(),
         animTimer = timer(),
@@ -16,7 +16,7 @@ function CrossPowerUp(maincontroller)
             up = Vector2(0,2*8),
             down = Vector2(0,13*8)
         },
-        enabled = false,
+        enabled = true,
         draw = function(self)
             spr(self.current_sprite,self.position.x,self.position.y)
         end,
@@ -117,7 +117,7 @@ function BulletPowerUp(maincontroller)
         shineSprite = 95, 
         alert_sfx = 2,
         bullet_sfx = 2,
-        position = Vector2(12*8,0),
+        position = Vector2(13*8,0),
         effectTimeSeconds = PICKUP_POWERUP_BULLET_POWERDURATION_SECONDS,
         t = timer(),
         animTimer = timer(),
@@ -165,17 +165,15 @@ function BulletPowerUp(maincontroller)
         end,
         mainFunction = function(self)
             -- Función de disparo
-            self.canShotTimer:sleep(0.05)
-            if btnp(🅾️) then
+            if btnp(🅾️) and self.canShotFlag then
                 local tmpc = deepcopy(c)
                 add(self.bulletArray,Bullet(tmpc.x,tmpc.y,tmpc.orientation,PICKUP_POWERUP_BULLET_BULLET_VELOCITY,PICKUP_POWERUP_BULLET_BULLET_SPRITE))
                 self.canShotFlag = false
             end 
-            if self.canShotTimer:isFinished() then 
-                self.canShotFlag = true 
-            else 
-                self.canShotFlag = false 
-            end            
+            if not btn(🅾️) then
+                self.canShotFlag = true
+            end 
+      
            -- Control de borrado
            for bullet in all(self.bulletArray) do 
                 if time() > bullet.initTime +  self.bulletDuration then

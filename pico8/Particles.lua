@@ -28,7 +28,11 @@ function Particles()
                 --move
                 fx.x+=fx.dx
                 fx.y+=fx.dy
+                -- Eliminacion
+                if time() > fx.initTime + PARTICLES_MAX_LIFE_TIME_SECONDS then del(self.effects,fx) end
             end
+           
+
         end,
         draw = function(self)
             for fx in all(self.effects) do
@@ -45,6 +49,7 @@ function Particles()
                 x=x,
                 y=y,
                 t=0,
+                initTime = time(),
                 die=die,
                 dx=dx,
                 dy=dy,

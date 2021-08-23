@@ -11,6 +11,8 @@ function printd(data)
     end 
 end 
 
+
+
 function Vector2(px,py)
     return {
         x = px,
@@ -198,4 +200,22 @@ function SpriteMessageBox(_x,_y,_h,_w,_sprite_array)
             add(self.lines, messagel)
         end
     }
+end 
+
+
+IS_PRINTD_STATS_STARTED=false
+debugTimer = timer()
+function debugStats()
+    if not DEBUG_STATS then return 0 end 
+    debugTimer:sleep(3)
+    if not debugTimer:isFinished() then return 0 end
+    local curdate = stat(93) .. ':' .. stat(94)
+    local message = curdate .. ' -> MEM:' .. stat(0) .. ' CPU: ' .. stat(1) .. ' CPU SYS: ' .. stat(2)
+    message = message .. ' FRATE: ' .. stat(7)
+
+    if not IS_PRINTD_STATS_STARTED then 
+        printh( "****   "..GAME_ID.."   ****" , "stats.p8l",true)
+        IS_PRINTD_STATS_STARTED = true
+    end
+    printh(message,"stats.p8l",false)
 end 
