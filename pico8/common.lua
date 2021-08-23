@@ -43,7 +43,7 @@ function Vector2(px,py)
             self.y *= my
         end,
         print = function(self)
-            printd("X: " .. self.x .. " Y:" .. self.y)
+            printd("Vector2 print X: " .. self.x .. " Y:" .. self.y  .. "--> " .. self.orientation) 
         end 
     }
 end

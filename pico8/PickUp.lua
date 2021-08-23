@@ -72,8 +72,12 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points,_type)
                 sfx(0)
                 overlap_obj.overlaps += 1
                 overlap_obj:add_chain_to_tail()
+            -- Cross pickup
             elseif self.type == PICKUP_POWERUP_CROSS_ID then
                 overlap_obj.crossPower.enabled = true
+            -- Bullet pickup
+            elseif self.type == PICKUP_POWERUP_BULLET_ID then
+                overlap_obj.bulletPower.enabled = true
             end 
             -- Desactivamos el pickup
             self.isActive = false
@@ -126,15 +130,17 @@ function PowerUpPickUpFactory(_overlap_obj,terrainvector_obj)
         overlap_obj = _overlap_obj,
         pickups={},
         t = timer(),
+        lastOverlaped = 0,
         cross_powerup_enabled = true,
         tv=terrainvector_obj,
         create = function(self)
             -- CROSS POWER UP
-            if self.cross_powerup_enabled and self.overlap_obj.overlaps > 0 and self.overlap_obj.overlaps % 10 == 0 then  
+            if self.cross_powerup_enabled and self.overlap_obj.overlaps % 10 == 0 and self.overlap_obj.overlaps > self.lastOverlaped then  
                 local r = self.tv:fetchRandom()
-                local trueAndFalse = {true, false}
-                if trueAndFalse[flr(rnd(3)) + 1] then 
-                    printd(flr(rnd(3)) + 1)
+                local randval = flr(rnd(PICKUP_POWERUP_CROSS_PROB)) + 1
+                printd("Overlap: " .. self.overlap_obj.overlaps .. "  Aparece el valor: " .. randval)
+                self.lastOverlaped = self.overlap_obj.overlaps
+                if randval == 1 then 
                     self.cross_powerup_enabled = false
                     add(self.pickups,PickUp(PICKUP_POWERUP_CROSS_SPRITE, r.x * 8, r.y * 8, self.overlap_obj,_points,PICKUP_POWERUP_CROSS_ID))
                 end
