@@ -42,7 +42,7 @@ function TerrainVector(_flag,_x_max,_y_max)
     }
 end 
 
-function PickUp(_sprite, _x, _y, overlap_obj,_points,_type)
+function PickUp(_sprite, _x, _y, overlap_obj,_points,_type,_other_overlaps_arr)
     -- Gestor de una pickup
     return {
       x = _x,
@@ -55,6 +55,7 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points,_type)
       points=_points,
       sprite = _sprite,
       isActive = true,
+      other_overlaps_arr = _other_overlaps_arr,
       draw = function(self)
          self.particles:draw()
          if (self.isActive) then
@@ -65,8 +66,7 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points,_type)
         self.particles:update()
         self.particles:effect_explode(self.x + 3,self.y + 3 ,2,{7,8,14,15},0.6)
       end,
-      isOverlaping = function(self)
-        if (overlap(overlap_obj,self) and self.isActive) then
+      execOverlap = function(self)
             -- Food pickup
             if not self.type then 
                 sfx(0)
@@ -81,6 +81,10 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points,_type)
             end 
             -- Desactivamos el pickup
             self.isActive = false
+      end,
+      isOverlaping = function(self)
+        if (overlap(overlap_obj,self) and self.isActive) then
+            self:execOverlap()
         end 
       end 
     }

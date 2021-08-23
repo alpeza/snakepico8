@@ -207,7 +207,7 @@ IS_PRINTD_STATS_STARTED=false
 debugTimer = timer()
 function debugStats()
     if not DEBUG_STATS then return 0 end 
-    debugTimer:sleep(3)
+    debugTimer:sleep(2)
     if not debugTimer:isFinished() then return 0 end
     local curdate = stat(93) .. ':' .. stat(94)
     local message = curdate .. ' -> MEM:' .. stat(0) .. ' CPU: ' .. stat(1) .. ' CPU SYS: ' .. stat(2)
