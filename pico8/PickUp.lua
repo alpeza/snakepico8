@@ -145,13 +145,26 @@ function PowerUpPickUpFactory(_overlap_obj,terrainvector_obj)
         pickups={},
         t = timer(),
         lastOverlaped = 0,
+        lastOverlaped_cuttail = 0,
         cross_powerup_enabled = true,
         bullet_powerup_enabled = true,
         cuttail_powerup_enabled = true,
         tv=terrainvector_obj,
+        existInPickups = function(self, id)
+            for el in all(self.pickups) do 
+                if PICKUP_POWERUP_CROSS_ID == id and self.cross_powerup_enabled then 
+                    return true
+                elseif PICKUP_POWERUP_BULLET_ID == id then 
+                    return true
+                elseif PICKUP_POWERUP_TAIL_ID == id and self.overlap_obj.cuttailPower:isEnabled() then 
+                    return true
+                end 
+            end 
+            return false
+        end,
         create = function(self)
             -- CROSS POWER UP
-            if self.cross_powerup_enabled and self.overlap_obj.overlaps % 10 == 0 and self.overlap_obj.overlaps > self.lastOverlaped then  
+            if not self:existInPickups(PICKUP_POWERUP_CROSS_ID) and self.cross_powerup_enabled and self.overlap_obj.overlaps % 5 == 0 and self.overlap_obj.overlaps > self.lastOverlaped then  
                 local r = self.tv:fetchRandom()
                 local randval = flr(rnd(PICKUP_POWERUP_CROSS_PROB)) + 1
                 -- printd("Overlap: " .. self.overlap_obj.overlaps .. "  Aparece el valor: " .. randval)
@@ -162,7 +175,7 @@ function PowerUpPickUpFactory(_overlap_obj,terrainvector_obj)
                 end
             end
             -- BULLET POWER UP 
-            if self.bullet_powerup_enabled and self.overlap_obj.overlaps % 2 == 0 and self.overlap_obj.overlaps > self.lastOverlaped then  
+            if not self:existInPickups(PICKUP_POWERUP_BULLET_ID) and self.bullet_powerup_enabled and self.overlap_obj.overlaps % 9 == 0 and self.overlap_obj.overlaps > self.lastOverlaped then  
                 local r = self.tv:fetchRandom()
                 local randval = flr(rnd(PICKUP_POWERUP_CROSS_PROB)) + 1
                 -- printd("Overlap: " .. self.overlap_obj.overlaps .. "  Aparece el valor: " .. randval)
@@ -173,15 +186,11 @@ function PowerUpPickUpFactory(_overlap_obj,terrainvector_obj)
                 end
             end
             -- TAIL CUT
-            if self.cuttail_powerup_enabled and self.overlap_obj.overlaps % 1 == 0 and self.overlap_obj.overlaps > self.lastOverlaped then  
+            if not self:existInPickups(PICKUP_POWERUP_TAIL_ID) and self.cuttail_powerup_enabled and self.overlap_obj.overlaps % 20 == 0 and self.overlap_obj.overlaps > self.lastOverlaped_cuttail then  
                 local r = self.tv:fetchRandom()
-                local randval = flr(rnd(PICKUP_POWERUP_TAIL_PROB)) + 1
-                -- printd("Overlap: " .. self.overlap_obj.overlaps .. "  Aparece el valor: " .. randval)
-                self.lastOverlaped = self.overlap_obj.overlaps
-                if randval == 1 then 
-                    self.cross_powerup_enabled = false
-                    add(self.pickups,PickUp(PICKUP_POWERUP_TAIL_SPRITE, r.x * 8, r.y * 8, self.overlap_obj,_points,PICKUP_POWERUP_TAIL_ID))
-                end
+                self.lastOverlaped_cuttail = self.overlap_obj.overlaps
+                -- self.cuttail_powerup_enabled = false
+                add(self.pickups,PickUp(PICKUP_POWERUP_TAIL_SPRITE, r.x * 8, r.y * 8, self.overlap_obj,_points,PICKUP_POWERUP_TAIL_ID))
             end        
             -- OTHER POWER UPS 
         end,
@@ -196,6 +205,8 @@ function PowerUpPickUpFactory(_overlap_obj,terrainvector_obj)
             -- Control de powerups
             for pickup in all(self.pickups) do
                 pickup:isOverlaping()
+                -- Si ya esta en el array  lo desactivamos
+
                 if not pickup.isActive then
                     self.t:sleep(0.3)
                     if self.t:isFinished() then

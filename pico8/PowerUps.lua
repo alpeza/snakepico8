@@ -17,6 +17,9 @@ function CrossPowerUp(maincontroller)
             down = Vector2(0,13*8)
         },
         enabled = false,
+        isEnabled = function(self)
+            return self.enabled
+        end,
         draw = function(self)
             spr(self.current_sprite,self.position.x,self.position.y)
         end,
@@ -24,9 +27,6 @@ function CrossPowerUp(maincontroller)
             if self.enabled then 
                 self.current_sprite = self.activateSprite
                 self.t:sleep(self.effectTimeSeconds)
-                if self.t:isFinished() then 
-                    self.enabled = false
-                end
                 -- Control de parpadeo 
                 if ( self.t:getCurrent()  > ( 0.95 * self.effectTimeSeconds ) ) then 
                     self.animTimer:sleep(0.05)
@@ -36,7 +36,10 @@ function CrossPowerUp(maincontroller)
                     else 
                         self.current_sprite = self.activateSprite
                     end
-                end 
+                end
+                if self.t:isFinished() then 
+                    self.enabled = false
+                end
             else 
                 self.current_sprite = self.inactiveSprite
             end 
@@ -86,6 +89,9 @@ function Bullet(x,y,orientation,velocity,sprite)
         particles_trail_amount = 2,
         initTime = time(),
         enabled = true,
+        isEnabled = function(self)
+            return self.enabled
+        end,
         draw = function(self)
             if self.enabled then
                 spr(self.sprite,self.x,self.y)
@@ -138,6 +144,9 @@ function BulletPowerUp(maincontroller)
         canShotFlag = true,
         bulletDuration = PICKUP_POWERUP_BULLET_BULLET_DURATION_SECONDS,
         enabled = false,
+        isEnabled = function(self)
+            return self.enabled
+        end,
         cbulletArray = bulletArray,
         -- +++++ Functions ++++++
         draw = function(self)
@@ -212,6 +221,9 @@ function TailCutPowerUp(maincontroller)
         t = timer(),
         animTimer = timer(),
         enabled = false,
+        isEnabled = function(self)
+            return self.enabled
+        end,
         -- +++++ Functions ++++++
         draw = function(self)
             spr(self.current_sprite,self.position.x,self.position.y)
@@ -248,6 +260,7 @@ function TailCutPowerUp(maincontroller)
                 for i=1,self.totalCut do 
                     c.tail_array[#c.tail_array] = nil
                 end
+                self.enabled = false
             end 
         end 
     }
