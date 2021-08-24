@@ -219,3 +219,32 @@ function debugStats()
     end
     printh(message,"stats.p8l",false)
 end 
+
+function checkSolid(x,y,mflag)
+    local map_x=flr(x/8)
+    local map_y=flr(y/8)
+    local map_sprite=mget(map_x,map_y)
+    local flag=fget(map_sprite)
+    return flag==mflag
+end
+
+
+
+function hit(x,y,w,h,flag)
+    collide=false
+    for i=x,x+w,w do
+      if (fget(mget(i/8,y/8))>=flag) or
+         (fget(mget(i/8,(y+h)/8))>=flag) then
+            collide=true
+      end
+    end
+    
+    for i=y,y+h,h do
+      if (fget(mget(x/8,i/8))>=flag) or
+         (fget(mget((x+w)/8,i/8))>=flag) then
+            collide=true
+      end
+    end
+    
+    return collide
+  end

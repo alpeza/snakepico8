@@ -6,7 +6,7 @@ function CrossPowerUp(maincontroller)
         inactiveSprite = 94,
         shineSprite = 95, 
         alert_sfx = 2,
-        effectTimeSeconds = 20000000,
+        effectTimeSeconds = PICKUP_POWERUP_CROSS_POWERDURATION_SECONDS,
         position = Vector2(14*8,0),
         t = timer(),
         animTimer = timer(),
@@ -16,7 +16,7 @@ function CrossPowerUp(maincontroller)
             up = Vector2(0,2*8),
             down = Vector2(0,13*8)
         },
-        enabled = true,
+        enabled = false,
         draw = function(self)
             spr(self.current_sprite,self.position.x,self.position.y)
         end,
@@ -75,6 +75,8 @@ function Bullet(x,y,orientation,velocity,sprite)
     return {
         x = x,
         y = y,
+        w = 8,
+        h = 8,
         sprite = sprite,
         velocity = velocity,
         orientation = orientation,
@@ -118,6 +120,7 @@ function deepcopy(orig)
     return copy
 end
 
+bulletArray = {}
 function BulletPowerUp(maincontroller)
     return {
         c = maincontroller,
@@ -134,12 +137,12 @@ function BulletPowerUp(maincontroller)
         canShotTimer = timer(),
         canShotFlag = true,
         bulletDuration = PICKUP_POWERUP_BULLET_BULLET_DURATION_SECONDS,
-        enabled = true,
-        bulletArray = {},
+        enabled = false,
+        cbulletArray = bulletArray,
         -- +++++ Functions ++++++
         draw = function(self)
             spr(self.current_sprite,self.position.x,self.position.y)
-            for bullet in all(self.bulletArray) do 
+            for bullet in all(self.cbulletArray) do 
                 bullet:draw()
             end 
         end,
@@ -169,7 +172,7 @@ function BulletPowerUp(maincontroller)
                 self:mainFunction()
             end
             -- Actializamos la posición de los bullets 
-            for bullet in all(self.bulletArray) do 
+            for bullet in all(self.cbulletArray) do 
                 bullet:update()
             end 
         end,
@@ -177,7 +180,7 @@ function BulletPowerUp(maincontroller)
             -- Función de disparo
             if btnp(🅾️) and self.canShotFlag then
                 local tmpc = deepcopy(c)
-                add(self.bulletArray,Bullet(tmpc.x,tmpc.y,tmpc.orientation,PICKUP_POWERUP_BULLET_BULLET_VELOCITY,PICKUP_POWERUP_BULLET_BULLET_SPRITE))
+                add(self.cbulletArray,Bullet(tmpc.x,tmpc.y,tmpc.orientation,PICKUP_POWERUP_BULLET_BULLET_VELOCITY,PICKUP_POWERUP_BULLET_BULLET_SPRITE))
                 self.canShotFlag = false
             end 
             if not btn(🅾️) then
@@ -185,11 +188,67 @@ function BulletPowerUp(maincontroller)
             end 
       
            -- Control de borrado
-           for bullet in all(self.bulletArray) do 
+           for bullet in all(self.cbulletArray) do 
                 if time() > bullet.initTime +  self.bulletDuration then
-                    del(self.bulletArray, bullet)
+                    del(self.cbulletArray, bullet)
                 end 
            end 
+        end 
+    }
+end   
+
+
+function TailCutPowerUp(maincontroller)
+    return {
+        c = maincontroller,
+        current_sprite = 78,
+        activateSprite = 78,
+        inactiveSprite = 94,
+        shineSprite = 95,
+        totalCut = 10,
+        effectTimeSeconds = 1,
+        alert_sfx = 2,
+        position = Vector2(12*8,0),
+        t = timer(),
+        animTimer = timer(),
+        enabled = false,
+        -- +++++ Functions ++++++
+        draw = function(self)
+            spr(self.current_sprite,self.position.x,self.position.y)
+        end,
+        timeUpdater= function(self)
+            if self.enabled then 
+                self.current_sprite = self.activateSprite
+                self.t:sleep(self.effectTimeSeconds)
+                if self.t:isFinished() then 
+                    self.enabled = false
+                end
+                -- Control de parpadeo 
+                if ( self.t:getCurrent()  > ( 0.95 * self.effectTimeSeconds ) ) then 
+                    self.animTimer:sleep(0.05)
+                    if self.animTimer:isFinished() then 
+                        self.current_sprite = self.shineSprite
+                        sfx(self.alert_sfx)
+                    else 
+                        self.current_sprite = self.activateSprite
+                    end
+                end 
+            else 
+                self.current_sprite = self.inactiveSprite
+            end 
+        end,
+        update = function(self)
+            if self.enabled then
+                self:mainFunction()
+            end
+        end,
+        mainFunction = function(self)
+            local deletes=1
+            if #c.tail_array >= self.totalCut then 
+                for i=1,self.totalCut do 
+                    c.tail_array[#c.tail_array] = nil
+                end
+            end 
         end 
     }
 end   

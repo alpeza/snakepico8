@@ -42,7 +42,7 @@ function TerrainVector(_flag,_x_max,_y_max)
     }
 end 
 
-function PickUp(_sprite, _x, _y, overlap_obj,_points,_type,_other_overlaps_arr)
+function PickUp(_sprite, _x, _y, overlap_obj,_points,_type)
     -- Gestor de una pickup
     return {
       x = _x,
@@ -55,7 +55,6 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points,_type,_other_overlaps_arr)
       points=_points,
       sprite = _sprite,
       isActive = true,
-      other_overlaps_arr = _other_overlaps_arr,
       draw = function(self)
          self.particles:draw()
          if (self.isActive) then
@@ -78,11 +77,22 @@ function PickUp(_sprite, _x, _y, overlap_obj,_points,_type,_other_overlaps_arr)
             -- Bullet pickup
             elseif self.type == PICKUP_POWERUP_BULLET_ID then
                 overlap_obj.bulletPower.enabled = true
+            -- Cuttail pickup
+            elseif self.type == PICKUP_POWERUP_TAIL_ID then
+                overlap_obj.cuttailPower.enabled = true
             end 
             -- Desactivamos el pickup
             self.isActive = false
       end,
       isOverlaping = function(self)
+        for other in all(overlap_obj.bulletPower.cbulletArray) do 
+            -- printd('Validando ... ' .. other.x .. ' y:' .. other.y)
+            if (overlap(other,self) and self.isActive) then
+                del(overlap_obj.bulletPower.cbulletArray, other)
+                self:execOverlap()
+            end 
+        end 
+         
         if (overlap(overlap_obj,self) and self.isActive) then
             self:execOverlap()
         end 
@@ -136,19 +146,43 @@ function PowerUpPickUpFactory(_overlap_obj,terrainvector_obj)
         t = timer(),
         lastOverlaped = 0,
         cross_powerup_enabled = true,
+        bullet_powerup_enabled = true,
+        cuttail_powerup_enabled = true,
         tv=terrainvector_obj,
         create = function(self)
             -- CROSS POWER UP
             if self.cross_powerup_enabled and self.overlap_obj.overlaps % 10 == 0 and self.overlap_obj.overlaps > self.lastOverlaped then  
                 local r = self.tv:fetchRandom()
                 local randval = flr(rnd(PICKUP_POWERUP_CROSS_PROB)) + 1
-                printd("Overlap: " .. self.overlap_obj.overlaps .. "  Aparece el valor: " .. randval)
+                -- printd("Overlap: " .. self.overlap_obj.overlaps .. "  Aparece el valor: " .. randval)
                 self.lastOverlaped = self.overlap_obj.overlaps
                 if randval == 1 then 
                     self.cross_powerup_enabled = false
                     add(self.pickups,PickUp(PICKUP_POWERUP_CROSS_SPRITE, r.x * 8, r.y * 8, self.overlap_obj,_points,PICKUP_POWERUP_CROSS_ID))
                 end
             end
+            -- BULLET POWER UP 
+            if self.bullet_powerup_enabled and self.overlap_obj.overlaps % 2 == 0 and self.overlap_obj.overlaps > self.lastOverlaped then  
+                local r = self.tv:fetchRandom()
+                local randval = flr(rnd(PICKUP_POWERUP_CROSS_PROB)) + 1
+                -- printd("Overlap: " .. self.overlap_obj.overlaps .. "  Aparece el valor: " .. randval)
+                self.lastOverlaped = self.overlap_obj.overlaps
+                if randval == 1 then 
+                    self.cross_powerup_enabled = false
+                    add(self.pickups,PickUp(PICKUP_POWERUP_BULLET_SPRITE, r.x * 8, r.y * 8, self.overlap_obj,_points,PICKUP_POWERUP_BULLET_ID))
+                end
+            end
+            -- TAIL CUT
+            if self.cuttail_powerup_enabled and self.overlap_obj.overlaps % 1 == 0 and self.overlap_obj.overlaps > self.lastOverlaped then  
+                local r = self.tv:fetchRandom()
+                local randval = flr(rnd(PICKUP_POWERUP_TAIL_PROB)) + 1
+                -- printd("Overlap: " .. self.overlap_obj.overlaps .. "  Aparece el valor: " .. randval)
+                self.lastOverlaped = self.overlap_obj.overlaps
+                if randval == 1 then 
+                    self.cross_powerup_enabled = false
+                    add(self.pickups,PickUp(PICKUP_POWERUP_TAIL_SPRITE, r.x * 8, r.y * 8, self.overlap_obj,_points,PICKUP_POWERUP_TAIL_ID))
+                end
+            end        
             -- OTHER POWER UPS 
         end,
         draw = function(self)

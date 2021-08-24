@@ -25,7 +25,7 @@ function AboutScene(scene_controller)
             self.gui:addLine(" 😐 collection id: #0",7,5,5)
             self.gui:addLine(" 🐱 developer:     @ALPEZA",7,5,5)
             self.gui:addLine("∧∧∧∧∧∧∧∧∧∧∧∧∧∧",2,5,10)
-            self.gui:addLine(" ◆ ethereum author ◆ ",2,5,15)
+            self.gui:addLine(" ◆ ethereum author ◆ ",2,14,15)
                       
 
             self.gui:addLine("⬅️ Back to home",12,4*8-5,8*8)
