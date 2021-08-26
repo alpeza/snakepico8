@@ -5,6 +5,7 @@ function CrossPowerUp(maincontroller)
         activateSprite = 79,
         inactiveSprite = 94,
         shineSprite = 95, 
+        message = PICKUP_POWERUP_CROSS_MESSAGE,
         alert_sfx = 2,
         effectTimeSeconds = PICKUP_POWERUP_CROSS_POWERDURATION_SECONDS,
         position = Vector2(14*8,0),
@@ -135,7 +136,7 @@ function BulletPowerUp(maincontroller)
         inactiveSprite = 94,
         shineSprite = 95, 
         alert_sfx = 2,
-        bullet_sfx = 2,
+        bullet_sfx = 3,
         position = Vector2(13*8,0),
         effectTimeSeconds = PICKUP_POWERUP_BULLET_POWERDURATION_SECONDS,
         t = timer(),
@@ -188,6 +189,7 @@ function BulletPowerUp(maincontroller)
         mainFunction = function(self)
             -- Función de disparo
             if btnp(🅾️) and self.canShotFlag then
+                sfx(self.bullet_sfx)
                 local tmpc = deepcopy(c)
                 add(self.cbulletArray,Bullet(tmpc.x,tmpc.y,tmpc.orientation,PICKUP_POWERUP_BULLET_BULLET_VELOCITY,PICKUP_POWERUP_BULLET_BULLET_SPRITE))
                 self.canShotFlag = false

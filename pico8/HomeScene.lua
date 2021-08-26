@@ -8,6 +8,7 @@ function HomeScene(scene_controller)
         total_c = 3,
         count = 0,
         init = function(self)
+            music(1)
             self.t = timer()
         end,
         changeColor = function(self)
@@ -24,6 +25,7 @@ function HomeScene(scene_controller)
             self:changeColor()
             if btn(❎) then
                 sc:loadScene(SNAKE_SCENE_ID)
+                sfx(7)
             end
             if btn(🅾️) then
                 sc:loadScene(ABOUT_SCENE_ID)
