@@ -1,3 +1,46 @@
+function PlotMessage(message,initPos)
+    return {
+        initPos = initPos,
+        position = Vector2(initPos,15*8 + 2),
+        message = message,
+        t = timer(),
+        velocity = 3,
+        flick = 0.05,
+        colors = {14,7,12},
+        currentColor = 1,
+        init = function(self)
+            local a = 1
+        end, 
+        isEnabled = true,
+        draw = function(self)
+            print(self.message, self.position.x, self.position.y,self.colors[self.currentColor])
+        end,   
+        mainfun = function(self)
+            self.t:sleep(self.flick)
+            if self.t:isFinished() then
+                if  self.position.x < 8*16 then 
+                    self.position.x += self.velocity
+                else 
+                    self.position.x = self.initPos
+                    self.isEnabled = false
+                end
+
+                if #self.colors < self.currentColor then 
+                    self.currentColor = 1
+                else 
+                    self.currentColor += 1
+                end 
+            end 
+        end, 
+        update = function(self)
+            if self.isEnabled then 
+                self:mainfun()
+            end 
+        end     
+    }
+end 
+
+
 function CrossPowerUp(maincontroller)
     return {
         c = maincontroller,
@@ -7,6 +50,7 @@ function CrossPowerUp(maincontroller)
         shineSprite = 95, 
         message = PICKUP_POWERUP_CROSS_MESSAGE,
         alert_sfx = 2,
+        pm = PlotMessage("cross the walls", -8*8),
         effectTimeSeconds = PICKUP_POWERUP_CROSS_POWERDURATION_SECONDS,
         position = Vector2(14*8,0),
         t = timer(),
@@ -23,6 +67,12 @@ function CrossPowerUp(maincontroller)
         end,
         draw = function(self)
             spr(self.current_sprite,self.position.x,self.position.y)
+
+            -- Mensaje de ayuda
+            if self.enabled then
+                self.pm:draw()
+                self.pm:update()
+            end
         end,
         timeUpdater= function(self)
             if self.enabled then 
@@ -138,6 +188,7 @@ function BulletPowerUp(maincontroller)
         alert_sfx = 2,
         bullet_sfx = 3,
         position = Vector2(13*8,0),
+        pm = PlotMessage("press button 🅾️ to shoot ", -16*8),
         effectTimeSeconds = PICKUP_POWERUP_BULLET_POWERDURATION_SECONDS,
         t = timer(),
         animTimer = timer(),
@@ -155,6 +206,11 @@ function BulletPowerUp(maincontroller)
             for bullet in all(self.cbulletArray) do 
                 bullet:draw()
             end 
+            -- Mensaje de ayuda
+            if self.enabled then
+                self.pm:draw()
+                self.pm:update()
+            end
         end,
         timeUpdater= function(self)
             if self.enabled then 
